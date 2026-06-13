@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>狂気山脈 - アルペディア</title>
+<style>
+  :root{
+    --link:#2a4b8d; --redlink:#ba0000;
+    --ink:#202122; --muted:#54595d; --line:#a2a9b1; --line2:#c8ccd1;
+    --panel:#f8f9fa; --note:#fef6e7; --noteline:#f1d77b;
+    --serif:"Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP",serif;
+    --sans:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",YuGothic,"Noto Sans JP",Meiryo,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#fff;color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.72;}
+  a{color:var(--link);text-decoration:none;} a:hover{text-decoration:underline;}
+  a.redlink{color:var(--redlink);}
+  sup{font-size:.72em;}
+  .top{border-bottom:1px solid var(--line2);padding:8px 16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .brand{font-family:var(--serif);font-size:21px;letter-spacing:.02em;}
+  .brand b{font-weight:700;}
+  .brand small{display:block;font-family:var(--sans);font-size:10px;color:var(--muted);letter-spacing:.18em;margin-top:-2px;}
+  .search{margin-left:auto;display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;}
+  .search input{border:0;padding:5px 9px;font-size:13px;width:170px;outline:none;color:var(--muted);}
+  .search span{background:var(--panel);border-left:1px solid var(--line);padding:5px 10px;font-size:13px;color:var(--muted);}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 16px;}
+  .tabs{border-bottom:1px solid var(--line);margin-top:14px;display:flex;gap:2px;font-size:13px;}
+  .tabs a{padding:6px 14px 7px;color:var(--link);border:1px solid transparent;border-bottom:0;}
+  .tabs a.active{background:#fff;border-color:var(--line);border-bottom:1px solid #fff;color:var(--ink);position:relative;top:1px;}
+  .tabs a:hover{text-decoration:none;background:var(--panel);}
+  h1.title{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.3;margin:.5em 0 .1em;padding-bottom:.18em;border-bottom:1px solid var(--line2);}
+  .fromline{font-size:12px;color:var(--muted);margin-bottom:14px;}
+  .layout{display:flex;gap:24px;align-items:flex-start;}
+  .body{flex:1;min-width:0;}
+  .notice{background:var(--note);border:1px solid var(--noteline);border-left-width:6px;padding:9px 13px;font-size:13.5px;margin:0 0 16px;display:flex;gap:10px;}
+  .notice .ic{font-weight:700;flex:none;}
+  h2{font-family:var(--serif);font-weight:400;font-size:21px;border-bottom:1px solid var(--line2);padding-bottom:.18em;margin:1.5em 0 .55em;}
+  h2 .edit{font-family:var(--sans);font-size:11px;font-weight:400;color:var(--link);float:right;margin-top:.7em;}
+  h3{font-size:16px;margin:1.3em 0 .4em;}
+  p{margin:.5em 0 .85em;}
+  .infobox{flex:none;width:266px;border:1px solid var(--line);background:var(--panel);font-size:13px;line-height:1.55;margin-top:6px;}
+  .infobox .ib-title{text-align:center;font-weight:700;font-size:15px;padding:8px 10px;background:#eaecf0;border-bottom:1px solid var(--line);}
+  .infobox .ib-sub{text-align:center;font-size:11px;color:var(--muted);padding:3px 10px 7px;border-bottom:1px solid var(--line2);font-style:italic;}
+  .infobox .ib-img{padding:10px;text-align:center;border-bottom:1px solid var(--line2);}
+  .ib-mtn{height:120px;background:linear-gradient(180deg,#2b2f36 0%,#14171c 60%,#0b0d10 100%);position:relative;overflow:hidden;border:1px solid #000;}
+  .ib-mtn::before{content:"";position:absolute;inset:0;clip-path:polygon(0 100%,18% 52%,30% 70%,46% 22%,58% 55%,72% 30%,86% 64%,100% 40%,100% 100%);background:linear-gradient(180deg,#3a3f48,#0a0c0f);}
+  .ib-cap{font-size:11px;color:var(--muted);margin-top:6px;}
+  .infobox table{width:100%;border-collapse:collapse;}
+  .infobox th{text-align:left;vertical-align:top;padding:5px 8px;background:#eaecf0;width:38%;font-weight:700;border-top:1px solid var(--line2);}
+  .infobox td{padding:5px 8px;border-top:1px solid var(--line2);}
+  .toc{display:inline-block;background:var(--panel);border:1px solid var(--line2);padding:8px 16px 10px;font-size:13.5px;margin:6px 0 4px;min-width:230px;}
+  .toc .toc-h{text-align:center;font-weight:700;margin-bottom:5px;}
+  .toc ol{margin:0;padding-left:22px;} .toc ol ol{padding-left:18px;} .toc li{margin:1px 0;}
+  .refs{font-size:12.5px;color:var(--muted);} .refs ol{padding-left:22px;} .refs li{margin:2px 0;}
+  .cats{border:1px solid var(--line2);background:var(--panel);margin:26px 0 30px;padding:7px 12px;font-size:12.5px;}
+  .cats b{font-weight:700;} .cats a{margin:0 4px;} .cats .sep{color:var(--line);}
+  @media (max-width:760px){
+    .layout{flex-direction:column;} .infobox{width:100%;order:-1;} .search{display:none;} h1.title{font-size:25px;}
+  }
+  @media print{ .top,.tabs,.search{display:none;} body{font-size:11pt;} }
+</style>
+</head>
+<body>
 
+<div class="top">
+  <div class="brand"><b>アルペディア</b><small>ALPEDIA — フリー山岳百科</small></div>
+  <div class="search"><input value="狂気山脈"><span>検索</span></div>
+</div>
+
+<div class="wrap">
+  <div class="tabs">
+    <a class="active" href="#">記事</a><a href="#">ノート</a><a href="#">編集</a><a href="#">履歴</a>
+  </div>
+
+  <h1 class="title">狂気山脈</h1>
+  <div class="fromline">出典: フリー山岳百科『アルペディア』</div>
+
+  <div class="layout">
+    <div class="body">
+
+      <div class="notice"><span class="ic">⚠</span><div>本項目の地形情報は<b>航空写真の解析にもとづく速報的なもの</b>です。地上調査による検証は行われていません。</div></div>
+
+      <p><b>狂気山脈</b>（きょうきさんみゃく）は、<a href="#">南極大陸</a>の奥地で確認された巨大な山脈。最高地点の推定標高は <b>10,363&thinsp;m</b> とされ、確認できる限りでは<b>世界最高峰</b>にあたる<a href="#">未踏峰</a>である<sup><a href="#r1">[1]</a></sup>。正式な名称は定まっておらず、「狂気山脈」は自然発生的に用いられている呼称である。</p>
+
+      <div class="toc">
+        <div class="toc-h">目次</div>
+        <ol>
+          <li>1 概要</li>
+          <li>2 地形
+            <ol><li>2.1 漆黒の山稜</li><li>2.2 大黒壁</li></ol>
+          </li>
+          <li>3 発見の経緯</li>
+          <li>4 脚注</li>
+        </ol>
+      </div>
+
+      <h2>概要<span class="edit">[編集]</span></h2>
+      <p>南極大陸の最奥部に位置する。気象条件が極めて厳しいため、十分な調査は行われていない。現在得られている地形情報の多くは航空写真の分析にもとづくものであり、登頂可能と思われるルートもそこから割り出されている<sup><a href="#r1">[1]</a></sup>。標高は確認できる限りで世界最高であり、いまだ人類の登頂記録はない。</p>
+
+      <h2>地形<span class="edit">[編集]</span></h2>
+      <h3>漆黒の山稜</h3>
+      <p>標高 6,000&thinsp;m を越えたあたりを境に、山容が大きく変化するとされる。それより上部は雪が無くなり、<b>漆黒の山脈</b>が姿を現すという。</p>
+      <h3>大黒壁</h3>
+      <p>標高 9,000&thinsp;m 地点には、高い登攀技術を要求される岩壁「<b>大黒壁</b>（グレートブラックウォール）」が存在する。</p>
+
+      <h2>発見の経緯<span class="edit">[編集]</span></h2>
+      <p>近年、ニュージーランド航空の旅客機が行方不明となり、その捜索の最中に本山脈が発見された。なお、行方不明の<b>旅客機は未だ発見されていない</b>。</p>
+
+      <h2>脚注<span class="edit">[編集]</span></h2>
+      <div class="refs"><ol>
+        <li id="r1">航空写真の解析にもとづく推定値。地上調査による検証は未実施。</li>
+      </ol></div>
+
+      <div class="cats">
+        <b>カテゴリ:</b>
+        <a href="#">南極の山</a><span class="sep">|</span>
+        <a href="#">未踏峰</a><span class="sep">|</span>
+        <a href="#">世界最高峰</a>
+      </div>
+
+    </div>
+
+    <aside class="infobox">
+      <div class="ib-title">狂気山脈</div>
+      <div class="ib-sub">正式名称なし（通称）</div>
+      <div class="ib-img">
+        <div class="ib-mtn"></div>
+        <div class="ib-cap">航空写真をもとにした想像図</div>
+      </div>
+      <table>
+        <tr><th>標高</th><td>推定 10,363&thinsp;m</td></tr>
+        <tr><th>所在地</th><td>南極大陸 奥地</td></tr>
+        <tr><th>山系</th><td>不明</td></tr>
+        <tr><th>種類</th><td>調査中</td></tr>
+        <tr><th>初登頂</th><td>未踏</td></tr>
+      </table>
+    </aside>
+
+  </div>
+</div>
+
+</body>
+</html>
